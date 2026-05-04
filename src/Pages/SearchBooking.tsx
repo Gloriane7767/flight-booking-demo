@@ -1,5 +1,4 @@
 
-
 const SearchBooking = () => {
     return (
         <div>

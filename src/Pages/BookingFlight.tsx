@@ -1,15 +1,58 @@
+import { useState } from "react";
+import { bookFlight } from "../api/flightapi.ts";
 
-const BookingFlight = () => {
+type Props = { flightId: number; onClose: () => void };
+
+const BookingFlight = ({ flightId, onClose }: Props) => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleBook = async () => {
+        setLoading(true);
+        try {
+            await bookFlight(flightId, name, email);
+            setMessage("Booking confirmed!");
+        } catch {
+            setMessage("Booking failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <div className="bg-white p-4 rounded shadow mb-10">
+        <div>
             <h2 className="text-xl font-bold mb-4">Book Flight</h2>
-
-            <input id="name" placeholder="Name" className="border p-2 w-full mb-2" />
-            <input id="email" placeholder="Email" className="border p-2 w-full mb-2" />
-
-            <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                Confirm Booking
-            </button>
+            <input
+                className="border rounded px-3 py-2 text-sm w-full mb-2"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+            <input
+                className="border rounded px-3 py-2 text-sm w-full mb-2"
+                placeholder="Enter your email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <div className="flex gap-2">
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={handleBook}
+                    disabled={loading}
+                >
+                    {loading ? "Booking..." : "Book"}
+                </button>
+                <button
+                    className="bg-gray-300 px-4 py-2 rounded"
+                    onClick={onClose}
+                >
+                    Cancel
+                </button>
+            </div>
+            {message && <p className="mt-2 text-sm">{message}</p>}
         </div>
     );
 };
