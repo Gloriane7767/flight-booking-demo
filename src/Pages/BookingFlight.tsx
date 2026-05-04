@@ -14,7 +14,8 @@ const BookingFlight = ({ flightId, onClose }: Props) => {
         try {
             await bookFlight(flightId, name, email);
             setMessage("Booking confirmed!");
-        } catch {
+        } catch (err) {
+            console.error("Booking error:", err);
             setMessage("Booking failed. Please try again.");
         } finally {
             setLoading(false);

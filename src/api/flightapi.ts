@@ -12,10 +12,10 @@ export const getAvailableFlights = () =>
     api.get<Flight[]>("/available").then((r) => r.data);
 
 export const bookFlight = (flightId: number, passengerName: string, passengerEmail: string) =>
-    api.post<Booking>("/book", { flightId, passengerName, passengerEmail }).then((r) => r.data);
+    api.post<Booking>(`/${flightId}/book`, { passengerName, passengerEmail }).then((r) => r.data);
 
 export const getBookingsByEmail = (email: string) =>
     api.get<Booking[]>(`/bookings?email=${email}`).then((r) => r.data);
 
-export const cancelBooking = (bookingId: number, email: string) =>
-    api.delete(`/cancel/${bookingId}?email=${email}`).then((r) => r.data);
+export const cancelBooking = (flightId: number, email: string) =>
+    api.delete(`/${flightId}/cancel?email=${email}`).then((r) => r.data);
