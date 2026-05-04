@@ -17,5 +17,5 @@ export const bookFlight = (flightId: number, passengerName: string, passengerEma
 export const getBookingsByEmail = (email: string) =>
     api.get<Booking[]>(`/bookings?email=${email}`).then((r) => r.data);
 
-export const cancelBooking = (flightId: number, email: string) =>
-    api.delete(`/${flightId}/cancel?email=${email}`).then((r) => r.data);
+export const cancelBooking = (bookingId: number, email: string) =>
+    api.delete(`/${bookingId}/cancel?email=${email}`).then((r) => r.data);

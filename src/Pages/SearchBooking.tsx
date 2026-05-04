@@ -42,6 +42,7 @@ const SearchBooking = () => {
 
             {bookings.map((booking) => (
                 <div key={booking.id} className="border p-2 mt-2 rounded">
+                    <p className="text-xs text-gray-400">Booking ID: {booking.id}</p>
                     <p className="font-bold">{booking.flightNumber} → {booking.destination}</p>
                     <p className="text-sm text-gray-500">{booking.departureTime} – {booking.arrivalTime}</p>
                     <p className="text-sm">Passenger: {booking.passengerName}</p>
