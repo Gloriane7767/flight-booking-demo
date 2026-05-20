@@ -10,15 +10,19 @@ import type { Flight } from "../types.ts";
 const BookingForm = () => {
     const [flightId, setFlightId] = useState<number | null>(null);
     const [flights, setFlights] = useState<Flight[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     async function handleAllFlights() {
         const data = await getAllFlights();
         setFlights(data);
+        setCurrentPage(1);
     }
 
     async function handleAvailableFlights() {
         const data = await getAvailableFlights();
         setFlights(data);
+        setCurrentPage(1);
     }
 
     return (
@@ -40,8 +44,8 @@ const BookingForm = () => {
             </div>
 
             {/* FLIGHTS */}
-            <div id="flights" className="space-y-3 mb-10">
-                {flights.map((flight) => (
+            <div id="flights" className="space-y-3 mb-4">
+                {flights.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((flight) => (
                     <div key={flight.id} className="bg-white p-4 rounded shadow flex justify-between items-center relative">
                         <div>
                             <p className="font-bold">{flight.flightNumber} → {flight.destination}</p>
@@ -60,13 +64,30 @@ const BookingForm = () => {
 
                         {/* INLINE MODAL */}
                         {flightId === flight.id && (
-                            <div className="absolute right-0 top-0 mt-2 bg-white border rounded shadow-lg p-4 z-50 w-120">
+                            <div className="absolute right-0 top-0 mt-2 bg-white border rounded shadow-lg p-4 z-50 w-64">
                                 <BookingFlight flightId={flightId} onClose={() => setFlightId(null)} />
                             </div>
                         )}
                     </div>
                 ))}
             </div>
+
+            {/* PAGINATION */}
+            {flights.length > itemsPerPage && (
+                <div className="flex gap-4 items-center mb-10">
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(p => p - 1)}
+                        className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
+                    >Previous</button>
+                    <span>Page {currentPage} of {Math.ceil(flights.length / itemsPerPage)}</span>
+                    <button
+                        disabled={currentPage === Math.ceil(flights.length / itemsPerPage)}
+                        onClick={() => setCurrentPage(p => p + 1)}
+                        className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
+                    >Next</button>
+                </div>
+            )}
 
             {/* CANCELLATION */}
             <div className="bg-white p-4 rounded shadow mb-6">

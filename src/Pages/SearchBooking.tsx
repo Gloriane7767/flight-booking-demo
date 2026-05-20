@@ -41,7 +41,11 @@ const SearchBooking = () => {
             )}
 
             {bookings.map((booking) => (
-                <div key={booking.id} className="border p-2 mt-2 rounded">
+                <div key={booking.id} className="border p-2 mt-2 rounded relative">
+                    <button
+                        className="absolute top-1 right-1 text-gray-400 text-xs"
+                        onClick={() => setBookings(b => b.filter(x => x.id !== booking.id))}
+                    >✕</button>
                     <p className="text-xs text-gray-400">Booking ID: {booking.id}</p>
                     <p className="font-bold">{booking.flightNumber} → {booking.destination}</p>
                     <p className="text-sm text-gray-500">{booking.departureTime} – {booking.arrivalTime}</p>
