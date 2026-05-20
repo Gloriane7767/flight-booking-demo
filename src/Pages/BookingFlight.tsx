@@ -4,6 +4,7 @@ import { bookFlight } from "../api/flightapi.ts";
 type Props = { flightId: number; onClose: () => void };
 
 const BookingFlight = ({ flightId, onClose }: Props) => {
+    const [confirmed, setConfirmed] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
@@ -21,6 +22,16 @@ const BookingFlight = ({ flightId, onClose }: Props) => {
             setLoading(false);
         }
     };
+
+    if (!confirmed) return (
+        <div>
+            <p className="mb-3 font-semibold">Do you want to book this flight?</p>
+            <div className="flex gap-2">
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setConfirmed(true)}>Yes</button>
+                <button className="bg-gray-300 px-4 py-2 rounded" onClick={onClose}>No</button>
+            </div>
+        </div>
+    );
 
     return (
         <div>

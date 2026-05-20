@@ -9,7 +9,7 @@ export const getAllFlights = () =>
     api.get<Flight[]>("").then((r) => r.data);
 
 export const getAvailableFlights = () =>
-    api.get<Flight[]>("/available").then((r) => r.data);
+    api.get<Flight[]>("").then((r) => r.data);
 
 export const bookFlight = (flightId: number, passengerName: string, passengerEmail: string) =>
     api.post<Booking>(`/${flightId}/book`, { passengerName, passengerEmail }).then((r) => r.data);

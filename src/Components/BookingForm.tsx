@@ -32,13 +32,17 @@ const BookingForm = () => {
 
                 {/* Available Flights */}
                 <AvailableFlights onClick={handleAvailableFlights} />
+            </div>
 
+            {/* SEARCH */}
+            <div className="bg-white p-4 rounded shadow mb-6">
+                <SearchBooking />
             </div>
 
             {/* FLIGHTS */}
             <div id="flights" className="space-y-3 mb-10">
                 {flights.map((flight) => (
-                    <div key={flight.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
+                    <div key={flight.id} className="bg-white p-4 rounded shadow flex justify-between items-center relative">
                         <div>
                             <p className="font-bold">{flight.flightNumber} → {flight.destination}</p>
                             <p className="text-sm text-gray-500">{flight.departureTime} – {flight.arrivalTime}</p>
@@ -53,18 +57,15 @@ const BookingForm = () => {
                                 Book
                             </button>
                         </div>
+
+                        {/* INLINE MODAL */}
+                        {flightId === flight.id && (
+                            <div className="absolute right-0 top-0 mt-2 bg-white border rounded shadow-lg p-4 z-50 w-120">
+                                <BookingFlight flightId={flightId} onClose={() => setFlightId(null)} />
+                            </div>
+                        )}
                     </div>
                 ))}
-            </div>
-
-            {/* BOOKING FORM */}
-            <div className="bg-white p-4 rounded shadow mb-6">
-                {flightId && <BookingFlight flightId={flightId} onClose={() => setFlightId(null)} />}
-            </div>
-
-            {/* SEARCH */}
-            <div className="bg-white p-4 rounded shadow mb-6">
-                <SearchBooking />
             </div>
 
             {/* CANCELLATION */}
@@ -77,3 +78,5 @@ const BookingForm = () => {
 };
 
 export default BookingForm;
+
+
