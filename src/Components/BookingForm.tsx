@@ -43,6 +43,11 @@ const BookingForm = () => {
                 <SearchBooking />
             </div>
 
+            {/* CANCELLATION */}
+            <div className="bg-white p-4 rounded shadow mb-6">
+                <CancelBooking />
+            </div>
+
             {/* FLIGHTS */}
             <div id="flights" className="space-y-3 mb-4">
                 {flights.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((flight) => (
@@ -88,12 +93,6 @@ const BookingForm = () => {
                     >Next</button>
                 </div>
             )}
-
-            {/* CANCELLATION */}
-            <div className="bg-white p-4 rounded shadow mb-6">
-                <CancelBooking />
-            </div>
-
         </div>
     );
 };
