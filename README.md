@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+![Lexicon Logo](https://lexicongruppen.se/media/wi5hphtd/lexicon-logo.svg)
+# ✈️ Flight Reservation – Project Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is based on an existing Spring Boot backend that manages flights and bookings.
 
-Currently, two official plugins are available:
+Your task is to build a frontend user interface for the Flight Reservation System by consuming the provided REST API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project Goal
 
-## React Compiler
+Create a clean and usable flight booking interface where a user can:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- View all flights
+- View only available flights
+- Book a flight
+- Search for bookings by email
+- Cancel an existing booking
 
-## Expanding the ESLint configuration
+## Frontend Requirements
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Build the UI using:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- TypeScript
+- React Router
+- `lucide-react`
+- Functional components
+- React hooks
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Assignment Requirements
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Your solution must include the following features.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. Flights View
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a component that fetches and displays all flights from the API.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 2. Available Flights View
+
+Allow the user to see only flights that are currently available for booking.
+
+### 3. Booking Flow
+
+Make it possible for the user to book a flight from the UI.
+
+The booking form should collect:
+
+- Passenger name
+- Passenger email
+
+After a successful booking, the user should receive clear feedback in the interface.
+
+### 4. (OPTIONAL) Booking Lookup
+
+Provide a way for the user to enter an email address and view all bookings connected to that email.
+
+### 5.  (OPTIONAL) Cancel Booking
+
+Allow the user to cancel a booking by using:
+
+- Flight ID
+- Passenger email
+
+## API Endpoints
+
+Use the backend API to power the interface.
+
+- `GET /api/flights` - get all flights
+- `GET /api/flights/available` - get available flights
+- `POST /api/flights/{flightId}/book` - book a flight
+- `GET /api/flights/bookings?email={email}` - get bookings by email
+- `DELETE /api/flights/{flightId}/cancel?email={email}` - cancel a booking
+
+## Getting Started
+
+1. Run the backend application
+2. Open the API documentation at `http://localhost:8080/swagger-ui.html`
+3. Review the available endpoints
+4. Build the frontend UI
+5. Connect your components to the API

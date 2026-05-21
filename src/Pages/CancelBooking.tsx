@@ -2,12 +2,14 @@ import { useState } from "react";
 import { getBookingsByEmail, cancelBooking } from "../api/flightapi.ts";
 import type { Booking } from "../types";
 
+// Allows a user to find their bookings by email and cancel individual ones
 const CancelBooking = () => {
-    const [email, setEmail] = useState("");
-    const [bookings, setBookings] = useState<Booking[]>([]);
-    const [searched, setSearched] = useState(false);
-    const [messages, setMessages] = useState<Record<number, string>>({});
+    const [email, setEmail] = useState("");                          // user's email input
+    const [bookings, setBookings] = useState<Booking[]>([]);         // list of bookings fetched by email
+    const [searched, setSearched] = useState(false);                 // tracks if a search has been made
+    const [messages, setMessages] = useState<Record<number, string>>({}); // per-booking status messages
 
+    // Fetches bookings for the entered email and resets previous messages
     const handleFind = async () => {
         try {
             const data = await getBookingsByEmail(email);
@@ -19,6 +21,7 @@ const CancelBooking = () => {
         }
     };
 
+    // Calls the cancel API for a specific booking and shows a result message on that card
     const handleCancel = async (bookingId: number) => {
         try {
             await cancelBooking(bookingId, email);
@@ -29,6 +32,7 @@ const CancelBooking = () => {
         }
     };
 
+    // Removes a booking card from the visible list without calling the API
     const handleDismiss = (bookingId: number) => {
         setBookings(b => b.filter(x => x.id !== bookingId));
     };
