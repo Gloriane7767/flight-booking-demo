@@ -77,3 +77,31 @@ Use the backend API to power the interface.
 3. Review the available endpoints
 4. Build the frontend UI
 5. Connect your components to the API
+
+## Images
+#### Dashboard
+![Flights View](src/images/Skärmbild 2026-06-01 150916.png)
+
+Dashboard with Chatbot opened
+![Booking Form](src/images/Skärmbild 2026-06-01 150929.png)
+
+#### View All Flights
+![Booking Form](src/images/Skärmbild 2026-06-01 150952.png)
+
+#### View Available Flights
+![Cancel Booking](src/images/Skärmbild 2026-06-01 150952.png)
+
+#### Booking from Form
+![Booking Lookup](src/images/Skärmbild 2026-06-01 153132.png)
+
+#### Booking from Chatbot
+![Booking Lookup](src/images/Skärmbild 2026-06-01 151325.png)
+
+#### Booking Confirmation
+![Cancel Booking](src/images/Skärmbild 2026-06-01 153806.png)
+
+#### Flight My Bookings
+![Cancel Booking](src/images/Skärmbild 2026-06-01 153206.png)
+
+#### Cancel Bookings
+![Cancel Booking](src/images/Skärmbild 2026-06-01 153206.png)
