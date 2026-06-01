@@ -1,87 +1,101 @@
 import { useState } from "react";
 import { getBookingsByEmail, cancelBooking } from "../api/flightapi.ts";
 import type { Booking } from "../types";
+import { X } from "lucide-react";
 
-// Allows a user to find their bookings by email and cancel individual ones
-const CancelBooking = () => {
-    const [email, setEmail] = useState("");                          // user's email input
-    const [bookings, setBookings] = useState<Booking[]>([]);         // list of bookings fetched by email
-    const [searched, setSearched] = useState(false);                 // tracks if a search has been made
-    const [messages, setMessages] = useState<Record<number, string>>({}); // per-booking status messages
+type Props = { sharedEmail: string };
 
-    // Fetches bookings for the entered email and resets previous messages
+const statusBadge = (status: string) => {
+    const map: Record<string, string> = {
+        CONFIRMED: "bg-green-100 text-green-700",
+        CANCELLED: "bg-red-100 text-red-600",
+        PENDING: "bg-yellow-100 text-yellow-700",
+    };
+    return (
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${map[status] ?? "bg-gray-100 text-gray-600"}`}>
+            {status}
+        </span>
+    );
+};
+
+const CancelBooking = ({ sharedEmail }: Props) => {
+    const [bookings, setBookings] = useState<Booking[]>([]);
+    const [searched, setSearched] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [messages, setMessages] = useState<Record<number, { text: string; ok: boolean }>>({});
+
     const handleFind = async () => {
+        if (!sharedEmail.trim()) return;
+        setLoading(true);
         try {
-            const data = await getBookingsByEmail(email);
+            const data = await getBookingsByEmail(sharedEmail);
             setBookings(data);
             setSearched(true);
             setMessages({});
-        } catch (err) {
-            console.error("Find error:", err);
+        } catch {
+            setBookings([]);
+            setSearched(true);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Calls the cancel API for a specific booking and shows a result message on that card
     const handleCancel = async (bookingId: number) => {
         try {
-            await cancelBooking(bookingId, email);
-            setMessages(m => ({ ...m, [bookingId]: "Cancelled successfully." }));
-        } catch (err) {
-            console.error("Cancel error:", err);
-            setMessages(m => ({ ...m, [bookingId]: "Cancellation failed." }));
+            await cancelBooking(bookingId, sharedEmail);
+            setMessages(m => ({ ...m, [bookingId]: { text: "Cancelled successfully.", ok: true } }));
+        } catch {
+            setMessages(m => ({ ...m, [bookingId]: { text: "Cancellation failed.", ok: false } }));
         }
-    };
-
-    // Removes a booking card from the visible list without calling the API
-    const handleDismiss = (bookingId: number) => {
-        setBookings(b => b.filter(x => x.id !== bookingId));
     };
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-4">Cancel Booking</h2>
-
-            <input
-                placeholder="Enter email"
-                className="border p-2 w-full mb-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-
+            <h2 className="text-lg font-bold mb-3">Cancel a Booking</h2>
             <button
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-red-500 text-white px-4 py-2 rounded text-sm disabled:opacity-50"
                 onClick={handleFind}
+                disabled={loading}
             >
-                Find Bookings
+                {loading ? "Finding..." : "Find Bookings"}
             </button>
 
-            {searched && bookings.length === 0 && (
-                <p className="mt-2 text-sm text-gray-500">No bookings found for this email.</p>
+            {searched && bookings.length === 0 && !loading && (
+                <p className="mt-3 text-sm text-gray-500">No bookings found for this email.</p>
             )}
 
-            {bookings.map((booking) => (
-                <div key={booking.id} className="border p-2 mt-2 rounded relative">
-                    <button
-                        className="absolute top-1 right-1 text-gray-400 text-xs"
-                        onClick={() => handleDismiss(booking.id)}
-                    >✕</button>
-                    <p className="text-xs text-gray-400">Booking ID: {booking.id}</p>
-                    <p className="font-bold">{booking.flightNumber} → {booking.destination}</p>
-                    <p className="text-sm text-gray-500">{booking.departureTime} – {booking.arrivalTime}</p>
-                    <p className="text-sm">Passenger: {booking.passengerName}</p>
-                    <p className="text-sm">Status: {booking.status}</p>
-                    <p className="text-sm font-bold">${booking.price}</p>
-                    <button
-                        className="bg-red-500 text-white px-3 py-1 rounded mt-2 text-sm"
-                        onClick={() => handleCancel(booking.id)}
-                    >
-                        Cancel Booking
-                    </button>
-                    {messages[booking.id] && (
-                        <p className="mt-1 text-sm text-gray-500">{messages[booking.id]}</p>
-                    )}
-                </div>
-            ))}
+            <div className="space-y-2 mt-3">
+                {bookings.map((booking) => (
+                    <div key={booking.id} className="border rounded p-3 relative">
+                        <button
+                            aria-label="Dismiss"
+                            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                            onClick={() => setBookings(b => b.filter(x => x.id !== booking.id))}
+                        >
+                            <X size={14} />
+                        </button>
+                        <p className="text-xs text-gray-400 mb-1">Booking #{booking.id}</p>
+                        <p className="font-bold">{booking.flightNumber} → {booking.destination}</p>
+                        <p className="text-sm text-gray-500">{booking.departureTime} – {booking.arrivalTime}</p>
+                        <p className="text-sm">Passenger: {booking.passengerName}</p>
+                        <div className="flex items-center justify-between mt-1">
+                            {statusBadge(booking.status)}
+                            <p className="text-sm font-bold">${booking.price}</p>
+                        </div>
+                        <button
+                            className="bg-red-500 text-white px-3 py-1 rounded mt-2 text-sm hover:bg-red-600"
+                            onClick={() => handleCancel(booking.id)}
+                        >
+                            Cancel Booking
+                        </button>
+                        {messages[booking.id] && (
+                            <p className={`mt-1 text-sm font-medium ${messages[booking.id].ok ? "text-green-600" : "text-red-500"}`}>
+                                {messages[booking.id].text}
+                            </p>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
